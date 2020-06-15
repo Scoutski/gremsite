@@ -1,24 +1,19 @@
 import React from 'react';
-import fetchMembers from './data/fetchMembers.ts';
-import formatJobsList from './helpers/jobsFormatter.ts';
-import { JOB_TYPES } from './helpers/jobTypes'
+import fetchJobs from './data/fetchJobs';
+import { JOB_TYPES } from './helpers/jobTypes';
 import './App.css';
 
 import Table from './components/Table';
 
 const App = () => {
   const [loading, setLoading] = React.useState(true);
-  const [FCMembers, setFCMembers] = React.useState(null);
-  const [jobsData, setJobsData] = React.useState({})
+  const [jobsData, setJobsData] = React.useState([])
 
-  const jobKeys = Object.keys(jobsData);
+  const jobKeys = jobsData && jobsData.map(job => job.name);
   React.useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchMembers();
-      setFCMembers(data);
-      
-      let organisedData = {};
-      await formatJobsList(data, organisedData, jobKeys, setJobsData);
+      const jobData = await fetchJobs();
+      setJobsData(jobData);
     }
 
     fetchData();
